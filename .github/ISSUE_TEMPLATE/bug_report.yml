@@ -1,0 +1,76 @@
+name: Bug report
+description: Сообщить о найденном дефекте F-Bank
+title: "[BUG] "
+labels: ["bug"]
+body:
+  - type: input
+    id: summary
+    attributes:
+      label: Краткое описание
+      description: Одной строкой - что и где сломано
+      placeholder: Поле "Сумма перевода" принимает отрицательные значения
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Blocker
+        - Critical
+        - Major
+        - Minor
+        - Trivial
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - P1
+        - P2
+        - P3
+        - P4
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Окружение
+      placeholder: macOS 14.6, Chrome 134, dist/index.html, python3 -m http.server 8000
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Шаги воспроизведения
+      value: |
+        1. Открыть `http://localhost:8000/?balance=10000&reserved=0`.
+        2. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Ожидаемый результат
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Фактический результат
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Дополнительно
+      description: Анализ кода, ссылки на тест-кейс, автотест, скриншоты

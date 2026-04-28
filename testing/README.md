@@ -58,6 +58,10 @@ URL задают рублёвый баланс и сумму резерва).
 | [BUG-002](manual/bug-reports/BUG-002-card-17-digits.md) | Major    | Поле "Номер карты" допускает ввод 17 цифр |
 | [BUG-003](manual/bug-reports/BUG-003-currency-mismatch.md) | Critical | Проверка достаточности средств всегда использует рублёвый счёт |
 
+Эти же дефекты заведены как GitHub Issues в репозитории - см. вкладку
+[Issues](../../issues?q=is%3Aissue+label%3Abug). Шаблон новых багов:
+[`.github/ISSUE_TEMPLATE/bug_report.yml`](../.github/ISSUE_TEMPLATE/bug_report.yml).
+
 ## Автоматизированные тесты
 
 Selenium 4 + pytest. Драйвер устанавливается автоматически через
