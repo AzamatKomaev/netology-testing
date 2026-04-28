@@ -1,0 +1,70 @@
+name: Selenium tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  selenium:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: testing/automated/requirements.txt
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r testing/automated/requirements.txt
+
+      - name: Show Chrome version (pre-installed on ubuntu-latest)
+        run: |
+          google-chrome --version
+          which google-chrome
+
+      - name: Start F-Bank static server
+        run: |
+          python -m http.server 8000 --directory dist >/tmp/fbank.log 2>&1 &
+          echo $! > /tmp/fbank.pid
+          # Wait until the server is ready (max 30s)
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8000/ -o /dev/null; then
+              echo "F-Bank is up"; exit 0
+            fi
+            sleep 1
+          done
+          echo "F-Bank failed to start"; cat /tmp/fbank.log; exit 1
+
+      - name: Run Selenium tests
+        env:
+          BROWSER: chrome
+          HEADLESS: "1"
+          APP_URL: http://localhost:8000
+        working-directory: testing/automated
+        run: |
+          pytest tests/ --junitxml=../../test-results.xml -v
+
+      - name: Stop F-Bank static server
+        if: always()
+        run: |
+          if [ -f /tmp/fbank.pid ]; then
+            kill "$(cat /tmp/fbank.pid)" || true
+          fi
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-results
+          path: test-results.xml
+          if-no-files-found: ignore

@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+.env
+
+# Test artifacts
+test-results.xml
+testing/automated/.pytest_cache/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
